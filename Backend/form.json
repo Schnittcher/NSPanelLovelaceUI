@@ -1,0 +1,510 @@
+{
+    "elements": [
+        {
+            "type": "ValidationTextBox",
+            "name": "topic",
+            "caption": "MQTT Topic"
+        },
+        {
+            "type": "ValidationTextBox",
+            "name": "fullTopic",
+            "caption": "Full Topic"
+        },
+        {
+            "type": "ExpansionPanel",
+            "name": "cardEntities",
+            "expanded": true,
+            "caption": "Card Entities",
+            "items": [
+                {
+                    "type": "List",
+                    "name": "listCards",
+                    "caption": "List of Cards",
+                    "rowCount": 5,
+                    "add": true,
+                    "delete": true,
+                    "sort": {
+                        "column": "heading",
+                        "direction": "ascending"
+                    },
+                    "columns": [
+                        {
+                            "caption": "Heading",
+                            "name": "heading",
+                            "width": "350px",
+                            "add": "-",
+                            "edit": {
+                                "type": "ValidationTextBox",
+                                "name": "displayNameEntity",
+                                "caption": "DisplayNameEntity"
+                            }
+                        },
+                        {
+                            "caption": "Card Type",
+                            "name": "cardType",
+                            "width": "100px",
+                            "add": "cardEntities",
+                            "edit": {
+                                "type": "Select",
+                                "onChange": "NSP_showCardValueList($id, $cardType);",
+                                "caption": "Einheit",
+                                "options": [
+                                    {
+                                        "caption": "Card Entities ",
+                                        "value": "cardEntities"
+                                    },
+                                    {
+                                        "caption": "Card Thermo (keine Funktion)",
+                                        "value": "cardThermo"
+                                    },
+                                    {
+                                        "caption": "Card Media (keine Funktion)",
+                                        "value": "cardMedia"
+                                    },
+                                    {
+                                        "caption": "Card Alarm (keine Funktion)",
+                                        "value": "cardAlarm"
+                                    },
+                                    {
+                                        "caption": "Card QR (keine Funktion)",
+                                        "value": "cardQR"
+                                    }
+                                ]
+                            }
+                        },
+                        {
+                            "caption": "Navigation",
+                            "name": "navigation",
+                            "width": "100px",
+                            "add": "0|0",
+                            "edit": {
+                                "type": "Select",
+                                "name": "DeviceType",
+                                "caption": "Einheit",
+                                "options": [
+                                    {
+                                        "caption": "0|0",
+                                        "value": "0|0"
+                                    },
+                                    {
+                                        "caption": "0|1",
+                                        "value": "0|1"
+                                    },
+                                    {
+                                        "caption": "1|0",
+                                        "value": "1|0"
+                                    },
+                                    {
+                                        "caption": "1|0",
+                                        "value": "1|0"
+                                    },
+                                    {
+                                        "caption": "1|1",
+                                        "value": "1|1"
+                                    },
+                                    {
+                                        "caption": "2|0",
+                                        "value": "2|0"
+                                    },
+                                    {
+                                        "caption": "2|0",
+                                        "value": "2|0"
+                                    }
+                                ]
+                            }
+                        },
+                        {
+                            "caption": "Card Entities Values",
+                            "name": "cardEntitiesValues",
+                            "width": "350px",
+                            "visible": false,
+                            "add": "",
+                            "edit": {
+                                "type": "List",
+                                "enabled": true,
+                                "visible": true,
+                                "name": "cardEntitiesValues",
+                                "caption": "List of Card Entities Values",
+                                "rowCount": 4,
+                                "add": true,
+                                "delete": true,
+                                "sort": {
+                                    "column": "DisplayNameEntity",
+                                    "direction": "ascending"
+                                },
+                                "columns": [
+                                    {
+                                        "caption": "Type",
+                                        "name": "type",
+                                        "width": "150x",
+                                        "add": "light",
+                                        "edit": {
+                                            "type": "Select",
+                                            "name": "type",
+                                            "caption": "Type",
+                                            "options": [
+                                                {
+                                                    "caption": "Light",
+                                                    "value": "light"
+                                                },
+                                                {
+                                                    "caption": "Shutter",
+                                                    "value": "shutter"
+                                                },
+                                                {
+                                                    "caption": "Delete",
+                                                    "value": "delete"
+                                                },
+                                                {
+                                                    "caption": "Text",
+                                                    "value": "text"
+                                                },
+                                                {
+                                                    "caption": "Button",
+                                                    "value": "button"
+                                                },
+                                                {
+                                                    "caption": "Switch",
+                                                    "value": "switch"
+                                                },
+                                                {
+                                                    "caption": "Number",
+                                                    "value": "number"
+                                                }
+                                            ]
+                                        }
+                                    },
+                                    {
+                                        "caption": "Variable (internalNameEntity)",
+                                        "name": "internalNameEntity",
+                                        "width": "150px",
+                                        "add": 0,
+                                        "edit": {
+                                            "type": "SelectVariable",
+                                            "name": "PropertyVariableID",
+                                            "caption": "Target"
+                                        }
+                                    },
+                                    {
+                                        "caption": "Icon",
+                                        "name": "icon",
+                                        "width": "150px",
+                                        "add": "",
+                                        "edit": {
+                                            "type": "Select",
+                                            "name": "icon",
+                                            "caption": "Icon",
+                                            "options": []
+                                        }
+                                    },
+                                    {
+                                        "caption": "IconColor",
+                                        "name": "color",
+                                        "width": "150px",
+                                        "add": 0,
+                                        "edit": {
+                                            "type": "SelectColor",
+                                            "name": "color",
+                                            "caption": "Color"
+                                        }
+                                    },
+                                    {
+                                        "caption": "DisplayNameEntity",
+                                        "name": "DisplayNameEntity",
+                                        "width": "200px",
+                                        "add": "-",
+                                        "edit": {
+                                            "type": "ValidationTextBox",
+                                            "name": "displayNameEntity",
+                                            "caption": "DisplayNameEntity"
+                                        }
+                                    },
+                                    {
+                                        "caption": "Brightness",
+                                        "name": "sliderBrightnessPos",
+                                        "width": "200px",
+                                        "add": 0,
+                                        "edit": {
+                                            "type": "SelectVariable",
+                                            "name": "PropertyVariableID",
+                                            "caption": "Target"
+                                        }
+                                    },
+                                    {
+                                        "caption": "Color Temperature",
+                                        "name": "sliderColorTempPos",
+                                        "width": "200px",
+                                        "add": 0,
+                                        "edit": {
+                                            "type": "SelectVariable",
+                                            "name": "PropertyVariableID",
+                                            "caption": "Target"
+                                        }
+                                    },
+                                    {
+                                        "caption": "Color Mode",
+                                        "name": "colorMode",
+                                        "width": "200px",
+                                        "add": false,
+                                        "edit": {
+                                            "type": "CheckBox",
+                                            "name": "colorMode",
+                                            "caption": "Color Mode"
+                                        }
+                                    }
+                                ]
+                            }
+                        },
+                        {
+                            "caption": "Card Thermo Values",
+                            "name": "cardThermoValues",
+                            "width": "350px",
+                            "add": "",
+                            "visible": false,
+                            "edit": {
+                                "type": "List",
+                                "enabled": false,
+                                "visible": false,
+                                "name": "cardThermoValues",
+                                "caption": "List of Thermo Values",
+                                "rowCount": 4,
+                                "add": true,
+                                "delete": true,
+                                "sort": {
+                                    "column": "internalNameEntity",
+                                    "direction": "ascending"
+                                },
+                                "columns": [
+                                    {
+                                        "caption": "Variable (internalNameEntity)",
+                                        "name": "internalNameEntity",
+                                        "width": "150px",
+                                        "add": 0,
+                                        "edit": {
+                                            "type": "SelectVariable",
+                                            "name": "PropertyVariableID",
+                                            "caption": "Target"
+                                        }
+                                    },
+                                    {
+                                        "caption": "Current Temperature",
+                                        "name": "currentTemp",
+                                        "width": "150px",
+                                        "add": 0,
+                                        "edit": {
+                                            "type": "SelectVariable",
+                                            "name": "PropertyVariableID",
+                                            "caption": "Target"
+                                        }
+                                    },
+                                    {
+                                        "caption": "Destination Temperature",
+                                        "name": "destTemp",
+                                        "width": "150px",
+                                        "add": 0,
+                                        "edit": {
+                                            "type": "SelectVariable",
+                                            "name": "PropertyVariableID",
+                                            "caption": "Target"
+                                        }
+                                    },
+                                    {
+                                        "caption": "Status",
+                                        "name": "status",
+                                        "width": "150px",
+                                        "add": 0,
+                                        "edit": {
+                                            "type": "SelectVariable",
+                                            "name": "PropertyVariableID",
+                                            "caption": "Target"
+                                        }
+                                    },
+                                    {
+                                        "caption": "Minimum Temperature",
+                                        "name": "minTemp",
+                                        "width": "150px",
+                                        "add": 0,
+                                        "edit": {
+                                            "type": "SelectVariable",
+                                            "name": "PropertyVariableID",
+                                            "caption": "Target"
+                                        }
+                                    },
+                                    {
+                                        "caption": "Maximum Temperature",
+                                        "name": "maxTemp",
+                                        "width": "150px",
+                                        "add": 0,
+                                        "edit": {
+                                            "type": "SelectVariable",
+                                            "name": "PropertyVariableID",
+                                            "caption": "Target"
+                                        }
+                                    },
+                                    {
+                                        "caption": "Setp Temperature",
+                                        "name": "stepTemp",
+                                        "width": "150px",
+                                        "add": 0,
+                                        "edit": {
+                                            "type": "SelectVariable",
+                                            "name": "PropertyVariableID",
+                                            "caption": "Target"
+                                        }
+                                    },
+                                    {
+                                        "caption": "Icon",
+                                        "name": "icon",
+                                        "width": "150px",
+                                        "add": "",
+                                        "edit": {
+                                            "type": "Select",
+                                            "name": "icon",
+                                            "caption": "Icon",
+                                            "options": [
+                                                {
+                                                    "caption": "-",
+                                                    "value": ""
+                                                },
+                                                {
+                                                    "caption": "ab-testing",
+                                                    "value": "ab-testing"
+                                                }
+                                            ]
+                                        }
+                                    },
+                                    {
+                                        "caption": "IconColor",
+                                        "name": "color",
+                                        "width": "150px",
+                                        "add": 0,
+                                        "edit": {
+                                            "type": "SelectColor",
+                                            "name": "color",
+                                            "caption": "Color"
+                                        }
+                                    },
+                                    {
+                                        "caption": "DisplayNameEntity",
+                                        "name": "DisplayNameEntity",
+                                        "width": "200px",
+                                        "add": "-",
+                                        "edit": {
+                                            "type": "ValidationTextBox",
+                                            "name": "displayNameEntity",
+                                            "caption": "DisplayNameEntity"
+                                        }
+                                    }
+                                ]
+                            }
+                        },
+                        {
+                            "caption": "Card Media Values",
+                            "name": "cardMediaValues",
+                            "width": "350px",
+                            "add": "",
+                            "visible": false,
+                            "edit": {
+                                "type": "List",
+                                "enabled": false,
+                                "visible": false,
+                                "name": "cardMediaValues",
+                                "caption": "List of Card Entities Values",
+                                "rowCount": 4,
+                                "add": true,
+                                "delete": true,
+                                "sort": {
+                                    "column": "title",
+                                    "direction": "ascending"
+                                },
+                                "columns": [
+                                    {
+                                        "caption": "Variable (internalNameEntity)",
+                                        "name": "internalNameEntity",
+                                        "width": "150px",
+                                        "add": 0,
+                                        "edit": {
+                                            "type": "SelectVariable",
+                                            "name": "PropertyVariableID",
+                                            "caption": "Target"
+                                        }
+                                    },
+                                    {
+                                        "caption": "Icon",
+                                        "name": "icon",
+                                        "width": "150px",
+                                        "add": "",
+                                        "edit": {
+                                            "type": "Select",
+                                            "name": "icon",
+                                            "caption": "Icon",
+                                            "options": [
+                                                {
+                                                    "caption": "-",
+                                                    "value": ""
+                                                },
+                                                {
+                                                    "caption": "ab-testing",
+                                                    "value": "ab-testing"
+                                                }
+                                            ]
+                                        }
+                                    },
+                                    {
+                                        "caption": "Title",
+                                        "name": "title",
+                                        "width": "150px",
+                                        "add": 0,
+                                        "edit": {
+                                            "type": "SelectVariable",
+                                            "name": "PropertyVariableID",
+                                            "caption": "Target"
+                                        }
+                                    },
+                                    {
+                                        "caption": "Author",
+                                        "name": "author",
+                                        "width": "150px",
+                                        "add": 0,
+                                        "edit": {
+                                            "type": "SelectVariable",
+                                            "name": "PropertyVariableID",
+                                            "caption": "Target"
+                                        }
+                                    },
+                                    {
+                                        "caption": "Volume",
+                                        "name": "volume",
+                                        "width": "150px",
+                                        "add": 0,
+                                        "edit": {
+                                            "type": "SelectVariable",
+                                            "name": "PropertyVariableID",
+                                            "caption": "Target"
+                                        }
+                                    },
+                                    {
+                                        "caption": "Current Speaker",
+                                        "name": "currentSpeaker",
+                                        "width": "150px",
+                                        "add": 0,
+                                        "edit": {
+                                            "type": "SelectVariable",
+                                            "name": "PropertyVariableID",
+                                            "caption": "Target"
+                                        }
+                                    }
+                                ]
+                            }
+                        }
+                    ],
+                    "values": [
+                        {}
+                    ]
+                }
+            ]
+        }
+    ],
+    "actions": [],
+    "status": []
+}

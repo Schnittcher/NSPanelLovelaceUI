@@ -1,0 +1,12 @@
+{
+    "id": "{364FA797-79D9-5CC9-5D75-11EFC620A7E4}",
+    "name": "Konfigurator",
+    "type": 4,
+    "vendor": "Kai Schnittcher",
+    "aliases": [],
+    "parentRequirements": [],
+    "childRequirements": [],
+    "implemented": [],
+    "prefix": "NSP",
+    "url": "https://deinsmarthome.info"
+}

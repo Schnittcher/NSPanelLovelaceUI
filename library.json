@@ -1,0 +1,12 @@
+{
+    "id": "{E9E009FD-F9A9-90DE-139C-8EF1201B67A4}",
+    "name": "NSPanel Lovelace UI",
+    "author": "Kai Schnittcher",
+    "url": "https://deinsmarthome.info",
+    "compatibility": {
+        "version": "6.0"
+    },
+    "version": "1.0",
+    "build": 0,
+    "date": 0
+}

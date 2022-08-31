@@ -1,0 +1,16 @@
+{
+    "id": "{3B83C152-8949-3678-47D1-BA796F97A1CB}",
+    "name": "Backend",
+    "type": 3,
+    "vendor": "Kai Schnittcher",
+    "aliases": [],
+    "parentRequirements": [
+        "{043EA491-0325-4ADD-8FC2-A30C8EEB4D3F}"
+    ],
+    "childRequirements": [],
+    "implemented": [
+        "{7F7632D9-FA40-4F38-8DEA-C83CD4325A32}"
+    ],
+    "prefix": "NSP",
+    "url": "https://deinsmarthome.info"
+}
