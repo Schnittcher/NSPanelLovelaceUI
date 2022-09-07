@@ -75,7 +75,11 @@ require_once __DIR__ . '/../libs/icon-mapping.php';
                     if (array_key_exists('CustomRecv', $Payload)) {
                         $this->SendDebug('ReceiveData :: Payload CustomRecv', $Payload['CustomRecv'], 0);
                         switch ($Payload['CustomRecv']) {
-                            case 'event,startup,39,eu': //Display wartet auf Initialisierung
+                            case 'event,startup,39,eu': //Display wartet auf Initialisierung die Nummer steht für die Firmware Version
+                            case 'event,startup,40,eu':
+                            case 'event,startup,41,eu':
+                            case 'event,startup,42,eu':
+                            case 'event,startup,43,eu':
                                 $this->SendDebug('Initialisierung :: Display', $data['Topic'], 0);
                                 $this->CustomSend('time~' . date('H:i'));
                                 $this->CustomSend('date~' . date('d.m.Y'));
