@@ -469,4 +469,17 @@ require_once __DIR__ . '/../libs/icon-mapping.php';
                 $this->UnregisterMessage($key, VM_UPDATE);
             }
         }
+
+        private function getVariableProfile(int $VariableID)
+        {
+            $this->SendDebug('Variable', $VariableID, 0);
+            $variable = IPS_GetVariable($VariableID);
+            if ($variable['VariableCustomProfile'] != '') {
+                $profileName = $variable['VariableCustomProfile'];
+            } else {
+                $profileName = $variable['VariableProfile'];
+            }
+
+            return IPS_GetVariableProfile($profileName);
+        }
     }
