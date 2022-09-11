@@ -135,13 +135,14 @@
                                 "columns": [
                                     {
                                         "caption": "Type",
-                                        "name": "type",
                                         "width": "150x",
+                                        "name": "type",
                                         "add": "light",
                                         "edit": {
                                             "type": "Select",
                                             "name": "type",
                                             "caption": "Type",
+                                            "onChange": "NSP_showCardEntitiesTypeValues($id, $type);",
                                             "options": [
                                                 {
                                                     "caption": "Light",
