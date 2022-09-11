@@ -13,8 +13,9 @@ require_once __DIR__ . '/../libs/icon-mapping.php';
             $this->RegisterPropertyString('topic', 'nspanel');
             $this->RegisterPropertyString('fullTopic', '%prefix%/%topic%');
             $this->RegisterPropertyString('listCards', '{}');
-
             $this->RegisterAttributeInteger('activeCardEntitie', 0);
+
+            $this->RegisterTimer('NSPanelUpdateDate', ((time() % 60) ?: 60) * 1000, 'NSP_setDateTime($_IPS[\'TARGET\']);');
         }
 
         public function Destroy()
@@ -326,6 +327,12 @@ require_once __DIR__ . '/../libs/icon-mapping.php';
                     echo $Value;
                     break;
             }
+        }
+
+        public function setDateTime()
+        {
+            $this->CustomSend('time~' . date('H:i'));
+            $this->CustomSend('date~' . date('d.m.Y'));
         }
 
         private function getVariablefromCard($internalNameEntity, string $searchVariable)
