@@ -130,13 +130,13 @@ require_once __DIR__ . '/../libs/icon-mapping.php';
                                 $this->entityUpd($activeCard);
                                 //TODO Unregister Variablen aus Popup
                                 break;
-                            case preg_match('(event,buttonPress2,[0-9]+,OnOff,)', $Payload['CustomRecv']) ? true : false : //event,buttonPress2,11555,OnOff,1
+                            case preg_match('(event,buttonPress2,[0-9]+,OnOff,)', $Payload['CustomRecv']) ? true : false: //event,buttonPress2,11555,OnOff,1
                                 $Light = explode(',', $Payload['CustomRecv'])[2];
                                 $State = explode(',', $Payload['CustomRecv'])[4];
                                 $this->SendDebug('Event :: buttonPress OnOff', $Light, 0);
                                 RequestAction($Light, boolval($State));
                                 break;
-                            case preg_match('(event,buttonPress2,[0-9]+,brightnessSlider,)', $Payload['CustomRecv']) ? true : false : //event,buttonPress2,28790,brightnessSlider,57
+                            case preg_match('(event,buttonPress2,[0-9]+,brightnessSlider,)', $Payload['CustomRecv']) ? true : false: //event,buttonPress2,28790,brightnessSlider,57
                                 $Light = explode(',', $Payload['CustomRecv'])[2];
                                 $State = explode(',', $Payload['CustomRecv'])[4];
                                 $this->SendDebug('Event :: buttonPress brightnessSlider', $Light, 0);
