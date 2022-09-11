@@ -120,7 +120,7 @@ require_once __DIR__ . '/../libs/icon-mapping.php';
                             case 'event,sleepReached,cardEntities':
                                 $this->CustomSend('pageType~screensaver');
                                 break;
-                            case preg_match('(event,pageOpenDetail,popupLight,)', $Payload['CustomRecv']) ? true : false :
+                            case preg_match('(event,pageOpenDetail,popupLight,)', $Payload['CustomRecv']) ? true : false:
                                 $Light = explode(',', $Payload['CustomRecv'])[3];
                                 $this->SendDebug('Event :: popupLight', $Light, 0);
                                 $this->entityUpdateDetail($Light);
