@@ -282,6 +282,33 @@ require_once __DIR__ . '/../libs/icon-mapping.php';
             $this->MQTTCommand('cmnd/' . $this->ReadPropertyString('topic') . '/CustomSend', $payload);
         }
 
+        public function showCardEntitiesTypeValues($Value)
+        {
+            switch ($Value) {
+                case 'light':
+                    $this->UpdateFormField('sliderBrightnessPos', 'visible', true);
+                    $this->UpdateFormField('sliderColorTempPos', 'visible', true);
+                    $this->UpdateFormField('colorMode', 'visible', true);
+                    $this->UpdateFormField('content', 'visible', false);
+                    break;
+                case 'switch':
+                    $this->UpdateFormField('sliderBrightnessPos', 'visible', false);
+                    $this->UpdateFormField('sliderColorTempPos', 'visible', false);
+                    $this->UpdateFormField('colorMode', 'visible', false);
+                    $this->UpdateFormField('content', 'visible', false);
+                    break;
+                case 'text':
+                    $this->UpdateFormField('sliderBrightnessPos', 'visible', false);
+                    $this->UpdateFormField('sliderColorTempPos', 'visible', false);
+                    $this->UpdateFormField('colorMode', 'visible', false);
+                    $this->UpdateFormField('content', 'visible', true);
+                    break;
+                case 'shutter':
+                    break;
+                }
+
+        }
+
         public function showCardValueList($Value)
         {
             switch ($Value) {
