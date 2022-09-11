@@ -231,6 +231,10 @@ require_once __DIR__ . '/../libs/icon-mapping.php';
                             case 'switch':
                                 $Value = intval(GetValue($cardValue['internalNameEntity']));
                                 break;
+                            case 'text':
+                                $variableProfile = $this->getVariableProfile($cardValue['internalNameEntity']);
+                                $Value = strval(GetValue($cardValue['internalNameEntity'])) . ' ' . $variableProfile['Suffix'];
+                                break;
                             default:
                                 # code...
                                 break;
