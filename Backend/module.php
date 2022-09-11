@@ -59,7 +59,7 @@ require_once __DIR__ . '/../libs/icon-mapping.php';
         public function MessageSink($TimeStamp, $SenderID, $Message, $Data)
         {
             $this->entityUpd($this->ReadAttributeInteger('activeCardEntitie'));
-            $this->SendDebug('MessageSink :: Aktualisiere Karte', $page, 0);
+            $this->SendDebug('MessageSink :: Aktualisiere Karte', $this->ReadAttributeInteger('activeCardEntitie'), 0);
         }
 
         public function ReceiveData($JSONString)
