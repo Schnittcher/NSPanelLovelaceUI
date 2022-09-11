@@ -242,6 +242,17 @@
                                         }
                                     },
                                     {
+                                        "caption": "Text Content",
+                                        "name": "content",
+                                        "width": "200px",
+                                        "add": 0,
+                                        "edit": {
+                                            "type": "SelectVariable",
+                                            "name": "PropertyVariableID",
+                                            "caption": "Target"
+                                        }
+                                    },
+                                    {
                                         "caption": "Color Mode",
                                         "name": "colorMode",
                                         "width": "200px",
