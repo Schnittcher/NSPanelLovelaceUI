@@ -232,8 +232,9 @@ require_once __DIR__ . '/../libs/icon-mapping.php';
                                 $Value = intval(GetValue($cardValue['internalNameEntity']));
                                 break;
                             case 'text':
-                                $variableProfile = $this->getVariableProfile($cardValue['internalNameEntity']);
-                                $Value = strval(GetValue($cardValue['internalNameEntity'])) . ' ' . $variableProfile['Suffix'];
+                                $variableProfileSuffix = ($this->getVariableProfile($cardValue['internalNameEntity']) != false ? ' ' . $this->getVariableProfile($cardValue['internalNameEntity'])['Suffix'] : '');
+                                $variableProfilePrefix = ($this->getVariableProfile($cardValue['internalNameEntity']) != false ? ' ' . $this->getVariableProfile($cardValue['internalNameEntity'])['Prefix'] : '');
+                                $Value = strval($variableProfilePrefix . GetValue($cardValue['internalNameEntity'])) . $variableProfileSuffix;
                                 break;
                             default:
                                 # code...
@@ -306,7 +307,6 @@ require_once __DIR__ . '/../libs/icon-mapping.php';
                 case 'shutter':
                     break;
                 }
-
         }
 
         public function showCardValueList($Value)
@@ -478,6 +478,10 @@ require_once __DIR__ . '/../libs/icon-mapping.php';
                 $profileName = $variable['VariableCustomProfile'];
             } else {
                 $profileName = $variable['VariableProfile'];
+            }
+
+            if ($profileName == '') {
+                return false;
             }
 
             return IPS_GetVariableProfile($profileName);
