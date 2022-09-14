@@ -14,6 +14,7 @@ require_once __DIR__ . '/../libs/icon-mapping.php';
             $this->RegisterPropertyString('fullTopic', '%prefix%/%topic%');
             $this->RegisterPropertyString('listCards', '{}');
             $this->RegisterAttributeInteger('activeCardEntitie', 0);
+            $this->RegisterAttributeBoolean('activeScreensaver', true);
 
             $this->RegisterTimer('NSPanelUpdateDate', ((time() % 60) ?: 60) * 1000, 'NSP_setDateTime($_IPS[\'TARGET\']);');
         }
@@ -58,8 +59,10 @@ require_once __DIR__ . '/../libs/icon-mapping.php';
 
         public function MessageSink($TimeStamp, $SenderID, $Message, $Data)
         {
-            $this->entityUpd($this->ReadAttributeInteger('activeCardEntitie'));
-            $this->SendDebug('MessageSink :: Aktualisiere Karte', $this->ReadAttributeInteger('activeCardEntitie'), 0);
+            if ($this->ReadAttributeBoolean('activeScreensaver')) {
+                $this->entityUpd($this->ReadAttributeInteger('activeCardEntitie'));
+                $this->SendDebug('MessageSink :: Aktualisiere Karte', $this->ReadAttributeInteger('activeCardEntitie'), 0);
+            }
         }
 
         public function ReceiveData($JSONString)
@@ -116,9 +119,11 @@ require_once __DIR__ . '/../libs/icon-mapping.php';
                                 // No break. Add additional comment above this line if intentional
                             case 'event,buttonPress2,screensaver,bExit,2': //Exit Screensaver
                                 $this->entityUpd($activeCard);
+                                $this->WriteAttributeBoolean('activeScreensaver', false);
                                 break;
                             case 'event,sleepReached,cardEntities':
                                 $this->CustomSend('pageType~screensaver');
+                                $this->WriteAttributeBoolean('activeScreensaver', true);
                                 break;
                             case preg_match('(event,pageOpenDetail,popupLight,)', $Payload['CustomRecv']) ? true : false:
                                 $Light = explode(',', $Payload['CustomRecv'])[3];
