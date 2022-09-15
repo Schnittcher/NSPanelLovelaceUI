@@ -12,6 +12,23 @@
         },
         {
             "type": "ExpansionPanel",
+            "caption": "Screensaver",
+            "items": [
+                {
+                    "type": "CheckBox",
+                    "name": "screensaver",
+                    "caption": "Screensaver active"
+                },
+                {
+                    "type": "NumberSpinner",
+                    "name": "screensaverTimeout",
+                    "caption": "Timeout",
+                    "suffix": "seconds"
+                }
+            ]
+        },
+        {
+            "type": "ExpansionPanel",
             "name": "cardEntities",
             "expanded": true,
             "caption": "Card Entities",

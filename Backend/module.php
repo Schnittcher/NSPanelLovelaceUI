@@ -13,6 +13,8 @@ require_once __DIR__ . '/../libs/icon-mapping.php';
             $this->RegisterPropertyString('topic', 'nspanel');
             $this->RegisterPropertyString('fullTopic', '%prefix%/%topic%');
             $this->RegisterPropertyString('listCards', '{}');
+            $this->RegisterPropertyBoolean('screensaver', true);
+            $this->RegisterPropertyInteger('screensaverTimeout', 20);
             $this->RegisterAttributeInteger('activeCardEntitie', 0);
             $this->RegisterAttributeBoolean('activeScreensaver', true);
 
@@ -38,6 +40,9 @@ require_once __DIR__ . '/../libs/icon-mapping.php';
                 foreach ($card[$card['cardType'] . 'Values'] as $cardKey => $cardValue) {
                 }
             }
+
+            $screensaverTimeout = $this->ReadPropertyInteger('screensaverTimeout');
+            $this->CustomSend('timeout~' . strval($screensaverTimeout));
         }
 
         public function GetConfigurationForm()
@@ -87,8 +92,12 @@ require_once __DIR__ . '/../libs/icon-mapping.php';
                                 $this->SendDebug('Initialisierung :: Display', $data['Topic'], 0);
                                 $this->CustomSend('time~' . date('H:i'));
                                 $this->CustomSend('date~' . date('d.m.Y'));
-                                $this->CustomSend('timeout~20');
                                 $this->CustomSend('dimmode~10~100~6371');
+                                if ($this->ReadPropertyBoolean('screensaver')) {
+                                    $screensaverTimeout = $this->ReadPropertyInteger('screensaverTimeout');
+                                    $this->CustomSend('timeout~' . strval($screensaverTimeout));
+                                    $this->CustomSend('pageType~screensaver');
+                                }
                                 $this->CustomSend('pageType~screensaver');
                                 break;
                             case 'event,buttonPress2,cardEntities,bPrev':
@@ -122,8 +131,10 @@ require_once __DIR__ . '/../libs/icon-mapping.php';
                                 $this->WriteAttributeBoolean('activeScreensaver', false);
                                 break;
                             case 'event,sleepReached,cardEntities':
-                                $this->CustomSend('pageType~screensaver');
-                                $this->WriteAttributeBoolean('activeScreensaver', true);
+                                if ($this->ReadPropertyBoolean('screensaver')) {
+                                    $this->CustomSend('pageType~screensaver');
+                                    $this->WriteAttributeBoolean('activeScreensaver', true);
+                                }
                                 break;
                             case preg_match('(event,pageOpenDetail,popupLight,)', $Payload['CustomRecv']) ? true : false:
                                 $Light = explode(',', $Payload['CustomRecv'])[3];
