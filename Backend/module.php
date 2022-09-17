@@ -57,7 +57,7 @@ require_once __DIR__ . '/../libs/icon-mapping.php';
             }
 
             //CardEntities Icons
-            $form['elements'][2]['items'][0]['columns'][3]['edit']['columns'][2]['edit']['options'] = $iconOptions;
+            $form['elements'][3]['items'][0]['columns'][3]['edit']['columns'][2]['edit']['options'] = $iconOptions;
 
             return json_encode($form);
         }
