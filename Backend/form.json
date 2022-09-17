@@ -15,6 +15,13 @@
             "caption": "Screensaver",
             "items": [
                 {
+                    "type": "HorizontalSlider",
+                    "name": "standbyBrightness",
+                    "caption": "Standby Brightness",
+                    "minimum": 0,
+                    "maximum": 100
+                },
+                {
                     "type": "CheckBox",
                     "name": "screensaver",
                     "caption": "Screensaver active"

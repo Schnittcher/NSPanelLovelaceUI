@@ -15,6 +15,7 @@ require_once __DIR__ . '/../libs/icon-mapping.php';
             $this->RegisterPropertyString('listCards', '{}');
             $this->RegisterPropertyBoolean('screensaver', true);
             $this->RegisterPropertyInteger('screensaverTimeout', 20);
+            $this->RegisterPropertyInteger('standbyBrightness', 10);
             $this->RegisterAttributeInteger('activeCardEntitie', 0);
             $this->RegisterAttributeBoolean('activeScreensaver', true);
 
@@ -92,7 +93,8 @@ require_once __DIR__ . '/../libs/icon-mapping.php';
                                 $this->SendDebug('Initialisierung :: Display', $data['Topic'], 0);
                                 $this->CustomSend('time~' . date('H:i'));
                                 $this->CustomSend('date~' . date('d.m.Y'));
-                                $this->CustomSend('dimmode~10~100~6371');
+                                $standbyBrightness = $this->ReadPropertyInteger('standbyBrightness');
+                                $this->CustomSend('dimmode~' . $standbyBrightness . '~100~6371');
                                 if ($this->ReadPropertyBoolean('screensaver')) {
                                     $screensaverTimeout = $this->ReadPropertyInteger('screensaverTimeout');
                                     $this->CustomSend('timeout~' . strval($screensaverTimeout));
