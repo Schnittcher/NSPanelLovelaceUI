@@ -2,9 +2,13 @@
 
 declare(strict_types=1);
 require_once __DIR__ . '/../libs/icon-mapping.php';
+require_once __DIR__ . '/../libs/functions.php';
 
     class Backend extends IPSModule
     {
+        use Icons;
+        use Functions;
+
         public function Create()
         {
             //Never delete this line!
@@ -48,12 +52,12 @@ require_once __DIR__ . '/../libs/icon-mapping.php';
 
         public function GetConfigurationForm()
         {
-            global $icons;
+            //global $icons;
             $form = json_decode(file_get_contents(__DIR__ . '/form.json'), true);
 
             $iconOptions = [];
 
-            foreach ($icons as $key => $value) {
+            foreach ($this->icons as $key => $value) {
                 array_push($iconOptions, ['caption' => $key, 'value' => $key]);
             }
 
@@ -241,7 +245,7 @@ require_once __DIR__ . '/../libs/icon-mapping.php';
                     foreach ($card[$card['cardType'] . 'Values'] as $cardKey => $cardValue) {
                         $entityUpd .= $cardValue['type'] . '~';
                         $entityUpd .= $cardValue['internalNameEntity'] . '~';
-                        $entityUpd .= get_icon($cardValue['icon']) . '~';
+                        $entityUpd .= $this->get_icon($cardValue['icon']) . '~';
                         $entityUpd .= '17299~';
                         $entityUpd .= $cardValue['DisplayNameEntity'];
                         switch ($cardValue['type']) {
