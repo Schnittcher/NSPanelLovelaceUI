@@ -23,6 +23,8 @@ require_once __DIR__ . '/../libs/functions.php';
             $this->RegisterAttributeInteger('activeCardEntitie', 0);
             $this->RegisterAttributeBoolean('activeScreensaver', true);
 
+            $this->RegisterAttributeString('activePopup', '');
+
             $this->RegisterTimer('NSPanelUpdateDate', ((time() % 60) ?: 60) * 1000, 'NSP_setDateTime($_IPS[\'TARGET\']);');
         }
 
@@ -69,19 +71,34 @@ require_once __DIR__ . '/../libs/functions.php';
 
         public function MessageSink($TimeStamp, $SenderID, $Message, $Data)
         {
-            if (!$this->ReadAttributeBoolean('activeScreensaver')) {
-                $this->entityUpd($this->ReadAttributeInteger('activeCardEntitie'));
-                $this->SendDebug('MessageSink :: Aktualisiere Karte', $this->ReadAttributeInteger('activeCardEntitie'), 0);
+            $this->SendDebug('MessageSink :: Triggerd by', $SenderID, 0);
+            switch ($Message) {
+                case VM_UPDATE:
+                     if ($Data[1]) {
+                         if (!$this->ReadAttributeBoolean('activeScreensaver')) {
+                             if ($this->ReadAttributeString('activePopup') != '') {
+                                 $this->SendDebug('MessageSink :: Aktualisiere aktives PopUp', $this->ReadAttributeString('activePopup'), 0);
+                                 $activePopup = json_decode($this->ReadAttributeString('activePopup'), true);
+                                 $this->entityUpdateDetail($activePopup['popupTyp'], $activePopup['internalNameEntity']);
+                                 return;
+                             }
+                             $this->entityUpd($this->ReadAttributeInteger('activeCardEntitie'));
+                             $this->SendDebug('MessageSink :: Aktualisiere Karte', $this->ReadAttributeInteger('activeCardEntitie'), 0);
+                         }
+                     }
+                    break;
+
+                default:
+                    # code...
+                    break;
             }
         }
 
         public function ReceiveData($JSONString)
         {
             if (!empty($this->ReadPropertyString('topic'))) {
-                //$this->SendDebug('ReceiveData :: JSON', $JSONString, 0);
                 $data = json_decode($JSONString, true);
                 $Payload = json_decode($data['Payload'], true);
-                //$this->SendDebug('ReceiveData :: Topic', $data['Topic'], 0);
                 $activeCard = $this->ReadAttributeInteger('activeCardEntitie');
                 switch ($data['Topic']) {
                 case 'tele/' . $this->ReadPropertyString('topic') . '/RESULT':
@@ -145,12 +162,13 @@ require_once __DIR__ . '/../libs/functions.php';
                             case preg_match('(event,pageOpenDetail,popupLight,)', $Payload['CustomRecv']) ? true : false:
                                 $Light = explode(',', $Payload['CustomRecv'])[3];
                                 $this->SendDebug('Event :: popupLight', $Light, 0);
-                                $this->entityUpdateDetail($Light);
                                 $this->UnregisterAlleMessages();
+                                $this->entityUpdateDetail('popupLight', $Light);
                                 break;
                             case 'event,buttonPress2,popupLight,bExit':
+                                $this->UnregisterAlleMessages();
+                                $this->WriteAttributeString('activePopup', '');
                                 $this->entityUpd($activeCard);
-                                //TODO Unregister Variablen aus Popup
                                 break;
                             case preg_match('(event,buttonPress2,[0-9]+,OnOff,)', $Payload['CustomRecv']) ? true : false: //event,buttonPress2,11555,OnOff,1
                                 $Light = explode(',', $Payload['CustomRecv'])[2];
@@ -179,49 +197,84 @@ require_once __DIR__ . '/../libs/functions.php';
             }
         }
 
-        public function entityUpdateDetail(string $internalNameEntity)
+        public function entityUpdateDetail(string $popupTyp, string $internalNameEntity)
         {
             $activeCard = $this->ReadAttributeInteger('activeCardEntitie');
             $listCards = json_decode($this->ReadPropertyString('listCards'), true);
             $card = $listCards[$activeCard];
 
+            //Unregister alle Messages, damit nicht ständig die Karten neu gesendet werden.
+            $this->UnregisterAlleMessages();
+            $RegisterMessages = [];
+
             foreach ($card[$card['cardType'] . 'Values'] as $cardKey => $cardValue) {
                 if ($cardValue['internalNameEntity'] == $internalNameEntity) {
 
-            /** ToDos
-             *  Register Variablen für Popup
-             *  Icon Color an Status der Lampe anpassen
-             */
+                    /** ToDos
+                     *  Icon Color an Status der Lampe anpassen
+                     */
                     $entityUpdateDetail = 'entityUpdateDetail~';
                     $entityUpdateDetail .= $internalNameEntity . '~';
-                    $entityUpdateDetail .= get_icon($cardValue['icon']) . '~';
+                    $entityUpdateDetail .= $this->get_icon($cardValue['icon']) . '~';
                     $entityUpdateDetail .= '58338~'; //IconColor
-            $entityUpdateDetail .= intval(GetValue($internalNameEntity)) . '~'; //ButtonState
+                    $entityUpdateDetail .= intval(GetValue($internalNameEntity)) . '~'; //ButtonState
 
-            $sliderBrightnessPos = '';
-                    if ($cardValue['sliderBrightnessPos'] > 0) { // Wenn Variable nicht vorhanden deaktiviere diese, sonst rechne um
-                $sliderBrightnessPos = GetValueFormatted($cardValue['sliderBrightnessPos']); //sliderBrightnessPos
+                    //Sammle IDs für RegisterMessage (internalNameEntity)
+                    array_push($RegisterMessages, $cardValue['internalNameEntity']);
+
+                    $sliderBrightnessPos = '';
+
+                    // Wenn Variable nicht vorhanden deaktiviere diese, sonst rechne um
+                    if ($cardValue['sliderBrightnessPos'] > 0) {
+                        $VariableProfile = $this->getVariableProfile($cardValue['sliderBrightnessPos']);
+                        $MinValue = $VariableProfile['MinValue'];
+                        $MaxValue = $VariableProfile['MaxValue'];
+                        $sliderBrightnessPos = $this->Scale(GetValue($cardValue['sliderBrightnessPos']), $MinValue, $MaxValue, 0, 100);
+
+                        //Sammle IDs für RegisterMessage (sliderBrightnessPos)
+                        array_push($RegisterMessages, $cardValue['sliderBrightnessPos']);
                     } else {
                         $sliderBrightnessPos = 'disable';
                     }
                     $entityUpdateDetail .= $sliderBrightnessPos . '~'; //sliderBrightnessPos
 
+                    ### Color Temperature Start ###
                     $sliderColorTempPos = '';
-                    if ($cardValue['sliderColorTempPos'] > 0) { // Wenn Variable nicht vorhanden deaktiviere diese, sonst rechne um
-                        $sliderColorTempPos = 'disable';
+                    // Wenn Variable nicht vorhanden deaktiviere diese, sonst rechne um
+                    if ($cardValue['sliderColorTempPos'] > 0) {
+                        $VariableProfile = $this->getVariableProfile($cardValue['sliderColorTempPos']);
+                        $MinValue = $VariableProfile['MinValue'];
+                        $MaxValue = $VariableProfile['MaxValue'];
+                        $sliderColorTempPos = $this->Scale(GetValue($cardValue['sliderColorTempPos']), $MinValue, $MaxValue, 0, 100);
+
+                        //Sammle IDs für RegisterMessage (sliderBrightnessPos)
+                        array_push($RegisterMessages, $cardValue['sliderColorTempPos']);
                     } else {
                         $sliderColorTempPos = 'disable';
                     }
                     $entityUpdateDetail .= $sliderColorTempPos . '~'; //sliderColorTempPos
 
-                    if (!$cardValue['colorMode']) { // Wenn Variable nicht vorhanden deaktiviere diese, sonst rechne um
+                    ### Color Temperature Ende ###
+
+                    // Wenn Variable nicht vorhanden deaktiviere diese, sonst rechne um
+                    if (!$cardValue['colorMode']) {
                         $cardValue['colorMode'] = 'disable';
                     }
                     $entityUpdateDetail .= $cardValue['colorMode'] . '~'; //colorMode
-            $entityUpdateDetail .= $this->Translate('Color') . '~'; //colorTranslation
-            $entityUpdateDetail .= $this->Translate('Color Temperature') . '~'; //brightness
-            $entityUpdateDetail .= $this->Translate('Brightness') . '~'; //brightness
-            $this->CustomSend($entityUpdateDetail);
+                    $entityUpdateDetail .= $this->Translate('Color') . '~'; //colorTranslation
+                    $entityUpdateDetail .= $this->Translate('Color Temperature') . '~'; //brightness
+                    $entityUpdateDetail .= $this->Translate('Brightness') . '~'; //brightness
+
+                    //Registriere Message für Variablenänderungen auf der aktuellen Karte
+                    $this->RegisterAllMessages($RegisterMessages);
+
+                    $this->CustomSend($entityUpdateDetail);
+
+                    $activePopup = [];
+                    $activePopup['popupTyp'] = $popupTyp;
+                    $activePopup['internalNameEntity'] = $internalNameEntity;
+
+                    $this->WriteAttributeString('activePopup', json_encode($activePopup));
                 }
             }
         }
@@ -289,9 +342,7 @@ require_once __DIR__ . '/../libs/functions.php';
             }
 
             //Registriere Message für Variablenänderungen auf der aktuellen Karte
-            for ($i = 0; $i < count($RegisterMessages); $i++) {
-                $this->RegisterMessage($RegisterMessages[$i], VM_UPDATE);
-            }
+            $this->RegisterAllMessages($RegisterMessages);
 
             $this->CustomSend('pageType~cardEntities');
             $this->CustomSend($entityUpd);
@@ -489,6 +540,13 @@ require_once __DIR__ . '/../libs/functions.php';
             $MessageList = $this->GetMessageList();
             foreach ($MessageList as $key => $Message) {
                 $this->UnregisterMessage($key, VM_UPDATE);
+            }
+        }
+
+        private function RegisterAllMessages($Variables)
+        {
+            for ($i = 0; $i < count($Variables); $i++) {
+                $this->RegisterMessage($Variables[$i], VM_UPDATE);
             }
         }
 
