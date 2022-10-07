@@ -119,7 +119,7 @@ require_once __DIR__ . '/../libs/functions.php';
                                     $this->entityUpd($activeCard - 1);
                                     return;
                                 }
-                                // No break. Add additional comment above this line if intentional
+                                break;
                             case 'event,buttonPress2,cardEntities,bNext':
                                 $countCards = count(json_decode($this->ReadPropertyString('listCards'), true)) - 1;
                                 $this->SendDebug('Button bNext :: Anzahl Karten / Aktive Karte', $countCards . '/' . $activeCard, 0);
@@ -131,7 +131,7 @@ require_once __DIR__ . '/../libs/functions.php';
                                     $this->entityUpd($activeCard + 1);
                                     return;
                                 }
-                                // No break. Add additional comment above this line if intentional
+                                break;
                             case 'event,buttonPress2,screensaver,bExit,2': //Exit Screensaver
                                 $this->entityUpd($activeCard);
                                 $this->WriteAttributeBoolean('activeScreensaver', false);
