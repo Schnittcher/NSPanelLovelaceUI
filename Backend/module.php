@@ -98,6 +98,12 @@ require_once __DIR__ . '/../libs/functions.php';
         {
             if (!empty($this->ReadPropertyString('topic'))) {
                 $data = json_decode($JSONString, true);
+
+                //Für MQTT Fix in IPS Version 6.3
+                if (IPS_GetKernelDate() > 1670886000) {
+                    $data['Payload'] = utf8_decode($data['Payload']);
+                }
+
                 $Payload = json_decode($data['Payload'], true);
                 $activeCard = $this->ReadAttributeInteger('activeCardEntitie');
                 switch ($data['Topic']) {
