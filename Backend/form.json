@@ -281,11 +281,11 @@
                                         "caption": "Color Mode",
                                         "name": "colorMode",
                                         "width": "200px",
-                                        "add": false,
+                                        "add": 0,
                                         "edit": {
-                                            "type": "CheckBox",
-                                            "name": "colorMode",
-                                            "caption": "Color Mode"
+                                            "type": "SelectVariable",
+                                            "name": "PropertyVariableID",
+                                            "caption": "Target"
                                         }
                                     }
                                 ]

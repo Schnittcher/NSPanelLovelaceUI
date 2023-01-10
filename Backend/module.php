@@ -194,6 +194,16 @@ require_once __DIR__ . '/../libs/functions.php';
                                 $value = $this->dimDevice($variableID, $State);
                                 RequestAction($variableID, $this->dimDevice($variableID, $value));
                                 break;
+                            case preg_match('(event,buttonPress2,[0-9]+,colorWheel,)', $Payload['CustomRecv']) ? true : false: //event,buttonPress2,55653,colorWheel,25|90|160
+                                $Light = explode(',', $Payload['CustomRecv'])[2];
+                                $State = explode(',', $Payload['CustomRecv'])[4];
+                                $State = explode('|', $State);
+                                $variableID = $this->getVariablefromCard($Light, 'colorMode');
+                                $this->SendDebug('Event :: buttonPress colorWheel ColorVariable', $variableID, 0);
+                                $rgb = $this->pos_to_color($State[0], $State[1], $State[2]);
+                                $hex = sprintf('%02x%02x%02x', $rgb[0], $rgb[1], $rgb[2]);
+                                RequestAction($variableID, hexdec($hex));
+                                break;
                             default:
                             $this->SendDebug('Case Payload Result Topic :: Payload', $data['Payload'], 0);
                             break;
@@ -266,7 +276,9 @@ require_once __DIR__ . '/../libs/functions.php';
                     ### Color Temperature Ende ###
 
                     // Wenn Variable nicht vorhanden deaktiviere diese, sonst rechne um
-                    if (!$cardValue['colorMode']) {
+                    if ($cardValue['colorMode'] > 0) {
+                        array_push($RegisterMessages, $cardValue['colorMode']);
+                    } else {
                         $cardValue['colorMode'] = 'disable';
                     }
                     $entityUpdateDetail .= $cardValue['colorMode'] . '~'; //colorMode
