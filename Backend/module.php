@@ -210,6 +210,21 @@ require_once __DIR__ . '/../libs/functions.php';
                                 $value = $this->dimDevice($variableID, $State);
                                 RequestAction($variableID, $this->dimDevice($variableID, $value));
                                 break;
+                            case preg_match('(event,buttonPress2,[0-9]+,colorTempSlider,)', $Payload['CustomRecv']) ? true : false: //event,buttonPress2,35933,colorTempSlider,33
+
+                                $Light = explode(',', $Payload['CustomRecv'])[2];
+                                $State = explode(',', $Payload['CustomRecv'])[4];
+                                $this->SendDebug('Event :: buttonPress colorTempSlider', $Light, 0);
+
+                                $variableID = $this->getVariablefromCard($Light, 'sliderColorTempPos');
+                                $VariableProfile = $this->getVariableProfile($variableID);
+                                $MinValue = $VariableProfile['MinValue'];
+                                $MaxValue = $VariableProfile['MaxValue'];
+
+                                $sliderColorTempPos = $this->Scale($State, 0, 100, $MinValue, $MaxValue);
+                                $this->SendDebug('Event :: buttonPress colorTempSlider Scaled Value', $sliderColorTempPos, 0);
+                                RequestAction($variableID, $sliderColorTempPos);
+                                break;
                             case preg_match('(event,buttonPress2,[0-9]+,colorWheel,)', $Payload['CustomRecv']) ? true : false: //event,buttonPress2,55653,colorWheel,25|90|160
                                 $Light = explode(',', $Payload['CustomRecv'])[2];
                                 $State = explode(',', $Payload['CustomRecv'])[4];
