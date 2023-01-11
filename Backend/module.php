@@ -195,6 +195,12 @@ require_once __DIR__ . '/../libs/functions.php';
                                 $this->WriteAttributeString('activePopup', '');
                                 $this->entityUpd($activeCard);
                                 break;
+                            case preg_match('(event,buttonPress2,[0-9]+,button)', $Payload['CustomRecv']) ? true : false: //event,buttonPress2,34187,button
+                                $VariableID = explode(',', $Payload['CustomRecv'])[2];
+                                $this->SendDebug('Event :: buttonPress2 button', $VariableID, 0);
+                                $variableState = GetValue($VariableID);
+                                RequestAction($VariableID, !$variableState);
+                                break;
                             case preg_match('(event,buttonPress2,[0-9]+,OnOff,)', $Payload['CustomRecv']) ? true : false: //event,buttonPress2,11555,OnOff,1
                                 $Light = explode(',', $Payload['CustomRecv'])[2];
                                 $State = explode(',', $Payload['CustomRecv'])[4];
