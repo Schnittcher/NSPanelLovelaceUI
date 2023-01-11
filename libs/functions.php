@@ -9,7 +9,8 @@ trait Functions
         return ($Value - $SourceMinValue) / ($SourceMaxValue - $SourceMinValue) * ($DestMaxValue - $DestMinValue) + $DestMinValue;
     }
 
-    protected function HSVtoRGB($H, $S, $V) {
+    protected function HSVtoRGB($H, $S, $V)
+    {
         $H *= 6;
         $I = floor($H);
         $F = $H - $I;
@@ -18,29 +19,30 @@ trait Functions
         $K = $V * (1 - $S * (1 - $F));
         switch ($I) {
             case 0:
-                list($R,$G,$B) = array($V,$K,$M);
+                list($R, $G, $B) = [$V, $K, $M];
                 break;
             case 1:
-                list($R,$G,$B) = array($N,$V,$M);
+                list($R, $G, $B) = [$N, $V, $M];
                 break;
             case 2:
-                list($R,$G,$B) = array($M,$V,$K);
+                list($R, $G, $B) = [$M, $V, $K];
                 break;
             case 3:
-                list($R,$G,$B) = array($M,$N,$V);
+                list($R, $G, $B) = [$M, $N, $V];
                 break;
             case 4:
-                list($R,$G,$B) = array($K,$M,$V);
+                list($R, $G, $B) = [$K, $M, $V];
                 break;
             case 5:
             case 6: //for when $H=1 is given
-                list($R,$G,$B) = array($V,$M,$N);
+                list($R, $G, $B) = [$V, $M, $N];
                 break;
         }
-        return array(intval($R*255), intval($G*255), intval($B*255));
+        return [intval($R * 255), intval($G * 255), intval($B * 255)];
     }
 
-    protected function pos_to_color($x, $y, $wh) {
+    protected function pos_to_color($x, $y, $wh)
+    {
         $r = $wh / 2;
         $x = (($x - $r) / $r * 100) / 100;
         $y = (($r - $y) / $r * 100) / 100;
