@@ -31,6 +31,11 @@
                     "name": "screensaverTimeout",
                     "caption": "Timeout",
                     "suffix": "seconds"
+                },
+                {
+                    "type": "CheckBox",
+                    "name": "weatherActive",
+                    "caption": "Weather active"
                 }
             ]
         },
