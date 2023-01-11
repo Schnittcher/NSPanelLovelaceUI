@@ -491,6 +491,28 @@ require_once __DIR__ . '/../libs/functions.php';
             $this->CustomSend('date~' . date('d.m.Y'));
         }
 
+        public function weatherUpdate($values)
+        {
+            //weatherUpdate~X~27.1C~Fr.~Y~29.3C~Sa.~Z~25.4C~So.~A~24.1C~Mo.~B~23.8C~~
+            $command = 'weatherUpdate~';
+            $command .= $this->get_icon($values[0]) . '~'; //Tag 1 Icon
+            $command .= $values[1] . '~'; //Tag 1 Temperatur
+            $command .= $values[2] . '~'; //Tag 2 Name
+            $command .= $this->get_icon($values[3]) . '~'; //Tag 2 Icon
+            $command .= $values[4] . '~'; //Tag 2 Temperatur
+            $command .= $values[5] . '~'; //Tag 3 Name
+            $command .= $this->get_icon($values[6]) . '~'; //Tag 3 Icon
+            $command .= $values[7] . '~'; //Tag 3 Temperatur
+            $command .= $values[8] . '~'; //Tag 4 Name
+            $command .= $this->get_icon($values[9]) . '~'; //Tag 4 Icon
+            $command .= $values[10] . '~'; //Tag 4 Temperatur
+            $command .= $values[11] . '~'; //Tag 5 Name
+            $command .= $this->get_icon($values[12]) . '~'; //Tag 5 Icon
+            $command .= $values[13] . '~~'; //Tag 5 Temperatur
+            $this->WriteAttributeString('weatherUpdate', $command);
+            $this->CustomSend($command);
+        }
+
         private function getVariablefromCard($internalNameEntity, string $searchVariable)
         {
             $activeCard = $this->ReadAttributeInteger('activeCardEntitie');
@@ -631,26 +653,5 @@ require_once __DIR__ . '/../libs/functions.php';
             }
 
             return IPS_GetVariableProfile($profileName);
-        }
-
-        public function weatherUpdate($values) {
-            //weatherUpdate~X~27.1C~Fr.~Y~29.3C~Sa.~Z~25.4C~So.~A~24.1C~Mo.~B~23.8C~~
-            $command = 'weatherUpdate~';
-            $command .= $this->get_icon($values[0]). '~'; //Tag 1 Icon
-            $command .= $values[1]. '~'; //Tag 1 Temperatur
-            $command .= $values[2]. '~'; //Tag 2 Name
-            $command .= $this->get_icon($values[3]). '~'; //Tag 2 Icon
-            $command .= $values[4]. '~'; //Tag 2 Temperatur
-            $command .= $values[5]. '~'; //Tag 3 Name
-            $command .= $this->get_icon($values[6]). '~'; //Tag 3 Icon
-            $command .= $values[7]. '~'; //Tag 3 Temperatur
-            $command .= $values[8]. '~'; //Tag 4 Name
-            $command .= $this->get_icon($values[9]). '~'; //Tag 4 Icon
-            $command .= $values[10]. '~'; //Tag 4 Temperatur
-            $command .= $values[11]. '~'; //Tag 5 Name
-            $command .= $this->get_icon($values[12]). '~'; //Tag 5 Icon
-            $command .= $values[13]. '~~'; //Tag 5 Temperatur
-            $this->WriteAttributeString('weatherUpdate', $command);
-            $this->CustomSend($command);
         }
     }
