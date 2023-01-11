@@ -122,6 +122,8 @@ require_once __DIR__ . '/../libs/functions.php';
                             case 'event,startup,44,eu':
                             case 'event,startup,45,eu':
                             case 'event,startup,46,eu':
+                            case 'event,startup,47,eu':
+                            case 'event,startup,48,eu':
                                 $this->SendDebug('Initialisierung :: Display', $data['Topic'], 0);
                                 $this->CustomSend('time~' . date('H:i'));
                                 $this->CustomSend('date~' . date('d.m.Y'));
@@ -134,7 +136,7 @@ require_once __DIR__ . '/../libs/functions.php';
                                 }
                                 $this->CustomSend('pageType~screensaver');
                                 break;
-                            case 'event,buttonPress2,cardEntities,bPrev':
+                            case 'event,buttonPress2,navPrev,button':
                                 $countCards = count(json_decode($this->ReadPropertyString('listCards'), true));
                                 $this->SendDebug('Button bPrev :: Anzahl Karten / Aktive Karte', $countCards . '/' . $activeCard, 0);
 
@@ -148,7 +150,7 @@ require_once __DIR__ . '/../libs/functions.php';
                                     return;
                                 }
                                 break;
-                            case 'event,buttonPress2,cardEntities,bNext':
+                            case 'event,buttonPress2,navNext,button':
                                 $countCards = count(json_decode($this->ReadPropertyString('listCards'), true)) - 1;
                                 $this->SendDebug('Button bNext :: Anzahl Karten / Aktive Karte', $countCards . '/' . $activeCard, 0);
                                 if ($activeCard == $countCards) { //Erste Karte aufrufen

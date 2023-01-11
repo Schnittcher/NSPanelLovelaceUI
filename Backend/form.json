@@ -105,7 +105,7 @@
                             "caption": "Navigation",
                             "name": "navigation",
                             "width": "100px",
-                            "add": "0|0",
+                            "add": "~delete~~~~~delete~~~~~",
                             "edit": {
                                 "type": "Select",
                                 "name": "DeviceType",
@@ -113,31 +113,19 @@
                                 "options": [
                                     {
                                         "caption": "0|0",
-                                        "value": "0|0"
+                                        "value": "~delete~~~~~delete~~~~~"
                                     },
                                     {
                                         "caption": "0|1",
-                                        "value": "0|1"
+                                        "value": "~delete~~~~~x~navNext~>~65535~~"
                                     },
                                     {
                                         "caption": "1|0",
-                                        "value": "1|0"
-                                    },
-                                    {
-                                        "caption": "1|0",
-                                        "value": "1|0"
+                                        "value": "x~navPrev~<~65535~~~delete~~~~~"
                                     },
                                     {
                                         "caption": "1|1",
-                                        "value": "1|1"
-                                    },
-                                    {
-                                        "caption": "2|0",
-                                        "value": "2|0"
-                                    },
-                                    {
-                                        "caption": "2|0",
-                                        "value": "2|0"
+                                        "value": "x~navPrev~<~65535~~~x~navNext~>~65535~~"
                                     }
                                 ]
                             }
