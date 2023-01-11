@@ -45,8 +45,17 @@ require_once __DIR__ . '/../libs/functions.php';
 
             $listCards = json_decode($this->ReadPropertyString('listCards'), true);
 
+            //CardEntities und CardGrid haben die selben Values, deswegen die selbe Liste
             foreach ($listCards as $key => $card) {
-                foreach ($card[$card['cardType'] . 'Values'] as $cardKey => $cardValue) {
+                switch ($card['cardType']) {
+                    case 'cardGrid':
+                        $cardType = 'cardEntities';
+                        break;
+                    default:
+                        $cardType = $card['cardType'];
+                        break;
+                }
+                foreach ($card[$cardType . 'Values'] as $cardKey => $cardValue) {
                 }
             }
 
@@ -233,7 +242,20 @@ require_once __DIR__ . '/../libs/functions.php';
             $this->UnregisterAlleMessages();
             $RegisterMessages = [];
 
-            foreach ($card[$card['cardType'] . 'Values'] as $cardKey => $cardValue) {
+            //CardEntities und CardGrid haben die selben Values, deswegen die selbe Liste
+            foreach ($listCards as $key => $card) {
+                switch ($card['cardType']) {
+                    case 'cardGrid':
+                        $cardType = 'cardEntities';
+                        break;
+                    default:
+                        $cardType = $card['cardType'];
+
+                        break;
+                }
+            }
+
+            foreach ($card[$cardType . 'Values'] as $cardKey => $cardValue) {
                 if ($cardValue['internalNameEntity'] == $internalNameEntity) {
 
                     /** ToDos
@@ -323,7 +345,8 @@ require_once __DIR__ . '/../libs/functions.php';
 
             switch ($card['cardType']) {
                 case 'cardEntities':
-                    foreach ($card[$card['cardType'] . 'Values'] as $cardKey => $cardValue) {
+                case 'cardGrid':
+                    foreach ($card['cardEntities' . 'Values'] as $cardKey => $cardValue) {
                         $entityUpd .= $cardValue['type'] . '~';
                         $entityUpd .= $cardValue['internalNameEntity'] . '~';
                         $entityUpd .= $this->get_icon($cardValue['icon']) . '~';
@@ -372,7 +395,7 @@ require_once __DIR__ . '/../libs/functions.php';
             //Registriere Message für Variablenänderungen auf der aktuellen Karte
             $this->RegisterAllMessages($RegisterMessages);
 
-            $this->CustomSend('pageType~cardEntities');
+            $this->CustomSend('pageType~' . $card['cardType']);
             $this->CustomSend($entityUpd);
             $this->WriteAttributeInteger('activeCardEntitie', $page);
         }
@@ -414,6 +437,7 @@ require_once __DIR__ . '/../libs/functions.php';
         {
             switch ($Value) {
                 case 'cardEntities':
+                case 'cardGrid':
                     $this->UpdateFormField('cardEntitiesValues', 'visible', true);
                     $this->UpdateFormField('cardEntitiesValues', 'enabled', true);
                     $this->UpdateFormField('cardThermoValues', 'visible', false);
@@ -473,7 +497,21 @@ require_once __DIR__ . '/../libs/functions.php';
             $listCards = json_decode($this->ReadPropertyString('listCards'), true);
             $card = $listCards[$activeCard];
 
-            foreach ($card[$card['cardType'] . 'Values'] as $cardKey => $cardValue) {
+            //CardEntities und CardGrid haben die selben Values, deswegen die selbe Liste
+            foreach ($listCards as $key => $card) {
+                switch ($card['cardType']) {
+                                case 'cardGrid':
+                                    $cardType = 'cardEntities';
+                                    break;
+                                default:
+                                    $cardType = $card['cardType'];
+                                    break;
+                            }
+                foreach ($card[$cardType . 'Values'] as $cardKey => $cardValue) {
+                }
+            }
+
+            foreach ($card[$cardType . 'Values'] as $cardKey => $cardValue) {
                 if ($cardValue['internalNameEntity'] == $internalNameEntity) {
                     return $cardValue[$searchVariable];
                 }
