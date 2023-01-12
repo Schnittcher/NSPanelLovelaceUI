@@ -91,7 +91,7 @@
                                         "value": "cardThermo"
                                     },
                                     {
-                                        "caption": "Card Media (keine Funktion)",
+                                        "caption": "Card Media",
                                         "value": "cardMedia"
                                     },
                                     {
@@ -457,7 +457,7 @@
                                         "width": "150px",
                                         "add": 0,
                                         "edit": {
-                                            "type": "SelectVariable",
+                                            "type": "SelectObject",
                                             "name": "PropertyVariableID",
                                             "caption": "Target"
                                         }
@@ -517,13 +517,46 @@
                                         }
                                     },
                                     {
-                                        "caption": "Current Speaker",
-                                        "name": "currentSpeaker",
+                                        "caption": "PlayPause",
+                                        "name": "playPause",
                                         "width": "150px",
                                         "add": 0,
                                         "edit": {
                                             "type": "SelectVariable",
                                             "name": "PropertyVariableID",
+                                            "caption": "Target"
+                                        }
+                                    },
+                                    {
+                                        "caption": "Previous",
+                                        "name": "previous",
+                                        "width": "150px",
+                                        "add": 0,
+                                        "edit": {
+                                            "type": "SelectVariable",
+                                            "name": "PropertyVariableID",
+                                            "caption": "Target"
+                                        }
+                                    },
+                                    {
+                                        "caption": "Next",
+                                        "name": "next",
+                                        "width": "150px",
+                                        "add": 0,
+                                        "edit": {
+                                            "type": "SelectVariable",
+                                            "name": "PropertyVariableID",
+                                            "caption": "Target"
+                                        }
+                                    },
+                                    {
+                                        "caption": "Current Speaker",
+                                        "name": "currentSpeaker",
+                                        "width": "150px",
+                                        "add": 0,
+                                        "edit": {
+                                            "type": "ValidationTextBox",
+                                            "name": "currentSpeaker",
                                             "caption": "Target"
                                         }
                                     }

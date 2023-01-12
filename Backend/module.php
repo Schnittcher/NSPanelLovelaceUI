@@ -241,6 +241,56 @@ require_once __DIR__ . '/../libs/functions.php';
                                 $hex = sprintf('%02x%02x%02x', $rgb[0], $rgb[1], $rgb[2]);
                                 RequestAction($variableID, hexdec($hex));
                                 break;
+                            case preg_match('(event,buttonPress2,[0-9]+,media-pause)', $Payload['CustomRecv']) ? true : false: //"event,buttonPress2,11068,media-pause
+                                $Media = explode(',', $Payload['CustomRecv'])[2];
+                                $this->SendDebug('Event :: buttonPress media-pause', $Media, 0);
+
+                                $variableID = $this->getVariablefromCard($Media, 'playPause');
+                                $VariableProfile = $this->getVariableProfile($variableID);
+
+                                $value = GetValue($variableID);
+
+                                if ($this->mediaProfileMapping($VariableProfile, 'pause') == $value) {
+                                    $value = $this->mediaProfileMapping($VariableProfile, 'play');
+                                } else {
+                                    $value = $this->mediaProfileMapping($VariableProfile, 'pause');
+                                }
+                                $this->SendDebug('Event :: buttonPress media-pause Variable / Value', $variableID . ' / ' . $value, 0);
+                                RequestAction($variableID, $value);
+                                break;
+                            case preg_match('(event,buttonPress2,[0-9]+,media-next)', $Payload['CustomRecv']) ? true : false: //event,buttonPress2,11068,media-next
+                                $Media = explode(',', $Payload['CustomRecv'])[2];
+                                $this->SendDebug('Event :: buttonPress media-next', $Media, 0);
+
+                                $variableID = $this->getVariablefromCard($Media, 'next');
+                                $VariableProfile = $this->getVariableProfile($variableID);
+                                $value = $this->mediaProfileMapping($VariableProfile, 'next');
+                                $this->SendDebug('Event :: buttonPress media-next Variable / Value', $variableID . ' / ' . $value, 0);
+                                RequestAction($variableID, $value);
+                                break;
+                            case preg_match('(event,buttonPress2,[0-9]+,media-back)', $Payload['CustomRecv']) ? true : false: //event,buttonPress2,11068,media-back
+                                $Media = explode(',', $Payload['CustomRecv'])[2];
+                                $this->SendDebug('Event :: buttonPress media-back', $Media, 0);
+
+                                $variableID = $this->getVariablefromCard($Media, 'previous');
+                                $VariableProfile = $this->getVariableProfile($variableID);
+                                $value = $this->mediaProfileMapping($VariableProfile, 'previous');
+                                $this->SendDebug('Event :: buttonPress media-back Variable / Value', $variableID . ' / ' . $value, 0);
+                                RequestAction($variableID, $value);
+                                break;
+                            case preg_match('(event,buttonPress2,[0-9]+,volumeSlider,)', $Payload['CustomRecv']) ? true : false: //event,buttonPress2,11068,volumeSlider,9
+                                $Media = explode(',', $Payload['CustomRecv'])[2];
+                                $State = explode(',', $Payload['CustomRecv'])[4];
+                                $this->SendDebug('Event :: buttonPress volumeSlider', $Media, 0);
+
+                                $variableID = $this->getVariablefromCard($Media, 'volume');
+                                $VariableProfile = $this->getVariableProfile($variableID);
+                                $value = $this->dimDevice($variableID, $State);
+
+                                $this->SendDebug('Event :: buttonPress volumeSlider Variable / Value', $variableID . ' / ' . $value, 0);
+                                RequestAction($variableID, $value);
+
+                                break;
                             default:
                             $this->SendDebug('Case Payload Result Topic :: Payload', $data['Payload'], 0);
                             break;
@@ -394,6 +444,25 @@ require_once __DIR__ . '/../libs/functions.php';
                     break;
                     case 'cardMedia':
                         foreach ($card[$card['cardType'] . 'Values'] as $cardKey => $cardValue) {
+                            $Status = GetValue($cardValue['playPause']);
+
+                            $StatusProfile = $this->getVariableProfile($cardValue['playPause']);
+
+                            $playpauseicon = $this->mediaProfileMapping($StatusProfile, $Status);
+                            $entityUpd .= $cardValue['internalNameEntity'] . '~';
+                            $entityUpd .= GetValue($cardValue['title']) . '~';
+                            $entityUpd .= '~'; //Title Color
+                            $entityUpd .= GetValue($cardValue['author']) . '~';
+                            $entityUpd .= '~'; //Author Color
+                            $entityUpd .= GetValue($cardValue['volume']) . '~';
+                            $entityUpd .= $this->get_icon($playpauseicon) . '~';
+                            $entityUpd .= 'disable~'; //onOffBUtton
+                            $entityUpd .= 'disable~'; //Shuffle Icon
+
+                            array_push($RegisterMessages, $cardValue['playPause']);
+                            array_push($RegisterMessages, $cardValue['title']);
+                            array_push($RegisterMessages, $cardValue['author']);
+                            array_push($RegisterMessages, $cardValue['volume']);
                             /**
                              * $playpauseicon = 'play'; //TODO GetValue Status Play / Pause
                              * $entityUpd .= $cardValue['internalNameEntity'].'~';
@@ -416,8 +485,12 @@ require_once __DIR__ . '/../libs/functions.php';
             //Registriere Message für Variablenänderungen auf der aktuellen Karte
             $this->RegisterAllMessages($RegisterMessages);
 
-            $this->CustomSend('pageType~' . $card['cardType']);
-            $this->CustomSend($entityUpd);
+            //Update an Display nur senden, wenn sich wirklich was verändert hat, um das flackern zu minimieren.
+            if ($this->GetBuffer('entityUpd') != $entityUpd) {
+                $this->CustomSend('pageType~' . $card['cardType']);
+                $this->CustomSend($entityUpd);
+            }
+            $this->SetBuffer('entityUpd', $entityUpd);
             $this->WriteAttributeInteger('activeCardEntitie', $page);
         }
 
@@ -674,5 +747,36 @@ require_once __DIR__ . '/../libs/functions.php';
             }
 
             return IPS_GetVariableProfile($profileName);
+        }
+
+        private function mediaProfileMapping($VariableProfile, $Value)
+        {
+            switch ($VariableProfile['ProfileName']) {
+                case 'SONOS.Status':
+                    switch ($Value) {
+                        case 2:
+                            return 'play';
+                        case 1:
+                            return 'pause';
+                        case 'play':
+                            return $VariableProfile['Associations'][1]['Value'];
+                        case 'pause':
+                            return $VariableProfile['Associations'][2]['Value'];
+                            break;
+                        case 'previous':
+                            return $VariableProfile['Associations'][0]['Value'];
+                        case 'next':
+                            return $VariableProfile['Associations'][4]['Value'];
+                            break;
+                        default:
+                            # code...
+                            break;
+                    }
+                    break;
+
+                default:
+                    # code...
+                    break;
+            }
         }
     }
