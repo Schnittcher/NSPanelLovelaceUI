@@ -171,11 +171,14 @@ require_once __DIR__ . '/../libs/functions.php';
                                     return;
                                 }
                                 break;
-                            case 'event,buttonPress2,screensaver,bExit,2': //Exit Screensaver
+                                
+                            case preg_match('(event,buttonPress2,screensaver,bExit,*)', $Payload['CustomRecv']) ? true : false: //Exit Screensaver
                                 $this->entityUpd($activeCard);
                                 $this->WriteAttributeBoolean('activeScreensaver', false);
                                 break;
                             case 'event,sleepReached,cardEntities':
+                            case 'event,sleepReached,cardGrid':
+                            case 'event,sleepReached,cardMedia':
                                 if ($this->ReadPropertyBoolean('screensaver')) {
                                     $this->CustomSend('pageType~screensaver');
                                     $this->WriteAttributeBoolean('activeScreensaver', true);
@@ -486,7 +489,7 @@ require_once __DIR__ . '/../libs/functions.php';
             $this->RegisterAllMessages($RegisterMessages);
 
             //Update an Display nur senden, wenn sich wirklich was verändert hat, um das flackern zu minimieren.
-            if ($this->GetBuffer('entityUpd') != $entityUpd) {
+            if (($this->GetBuffer('entityUpd') != $entityUpd) OR ($this->ReadAttributeBoolean('activeScreensaver'))) {
                 $this->CustomSend('pageType~' . $card['cardType']);
                 $this->CustomSend($entityUpd);
             }
