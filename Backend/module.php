@@ -502,7 +502,7 @@ require_once __DIR__ . '/../libs/functions.php';
         {
             $this->SendDebug('CustomSend :: Payload', $payload, 0);
             $this->MQTTCommand('CustomSend', $payload);
-            $this->MQTTCommand('cmnd/' . $this->ReadPropertyString('topic') . '/CustomSend', $payload);
+            $this->MQTTCommand('cmnd/' . $this->ReadPropertyString('topic') . '/CustomSend', utf8_encode($payload));
         }
 
         public function showCardEntitiesTypeValues($Value)
