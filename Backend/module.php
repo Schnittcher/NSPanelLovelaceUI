@@ -196,6 +196,7 @@ require_once __DIR__ . '/../libs/functions.php';
                             case 'event,buttonPress2,popupLight,bExit':
                                 $this->UnregisterAlleMessages();
                                 $this->WriteAttributeString('activePopup', '');
+                                $this->SetBuffer('entityUpd','');
                                 $this->entityUpd($activeCard);
                                 break;
                             case preg_match('(event,buttonPress2,[0-9]+,button)', $Payload['CustomRecv']) ? true : false: //event,buttonPress2,34187,button
