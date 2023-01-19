@@ -171,7 +171,7 @@ require_once __DIR__ . '/../libs/functions.php';
                                     return;
                                 }
                                 break;
-                                
+
                             case preg_match('(event,buttonPress2,screensaver,bExit,*)', $Payload['CustomRecv']) ? true : false: //Exit Screensaver
                                 $this->entityUpd($activeCard);
                                 $this->WriteAttributeBoolean('activeScreensaver', false);
@@ -196,7 +196,7 @@ require_once __DIR__ . '/../libs/functions.php';
                             case 'event,buttonPress2,popupLight,bExit':
                                 $this->UnregisterAlleMessages();
                                 $this->WriteAttributeString('activePopup', '');
-                                $this->SetBuffer('entityUpd','');
+                                $this->SetBuffer('entityUpd', '');
                                 $this->entityUpd($activeCard);
                                 break;
                             case preg_match('(event,buttonPress2,[0-9]+,button)', $Payload['CustomRecv']) ? true : false: //event,buttonPress2,34187,button
@@ -490,7 +490,7 @@ require_once __DIR__ . '/../libs/functions.php';
             $this->RegisterAllMessages($RegisterMessages);
 
             //Update an Display nur senden, wenn sich wirklich was verändert hat, um das flackern zu minimieren.
-            if (($this->GetBuffer('entityUpd') != $entityUpd) OR ($this->ReadAttributeBoolean('activeScreensaver'))) {
+            if (($this->GetBuffer('entityUpd') != $entityUpd) || ($this->ReadAttributeBoolean('activeScreensaver'))) {
                 $this->CustomSend('pageType~' . $card['cardType']);
                 $this->CustomSend($entityUpd);
             }
@@ -502,7 +502,11 @@ require_once __DIR__ . '/../libs/functions.php';
         {
             $this->SendDebug('CustomSend :: Payload', $payload, 0);
             $this->MQTTCommand('CustomSend', $payload);
-            $this->MQTTCommand('cmnd/' . $this->ReadPropertyString('topic') . '/CustomSend', utf8_encode($payload));
+            //Für MQTT Fix in IPS Version 6.3
+            if (IPS_GetKernelDate() > 1670886000) {
+                $payload = utf8_encode($payload);
+            }
+            $this->MQTTCommand('cmnd/' . $this->ReadPropertyString('topic') . '/CustomSend', $payload);
         }
 
         public function showCardEntitiesTypeValues($Value)
