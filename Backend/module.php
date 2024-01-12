@@ -136,6 +136,15 @@ require_once __DIR__ . '/../libs/functions.php';
                             case 'event,startup,49,eu':
                             case 'event,startup,50,eu':
                             case 'event,startup,51,eu':
+                            case 'event,startup,52,eu':
+                            case 'event,startup,53,eu':
+                            case 'event,startup,54,eu':
+                            case 'event,startup,55,eu':
+                            case 'event,startup,56,eu':
+                            case 'event,startup,57,eu':
+                            case 'event,startup,58,eu':                                  
+                            case 'event,startup,59,eu':                                                                    
+                            case 'event,startup,60,eu':
                                 $this->SendDebug('Initialisierung :: Display', $data['Topic'], 0);
                                 $this->CustomSend('time~' . date('H:i'));
                                 $this->CustomSend('date~' . date('d.m.Y'));
