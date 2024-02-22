@@ -139,7 +139,7 @@
                             "name": "cardEntitiesValues",
                             "width": "350px",
                             "visible": false,
-                            "add": "",
+                            "add": [],
                             "edit": {
                                 "type": "List",
                                 "enabled": true,
@@ -292,7 +292,7 @@
                             "caption": "Card Thermo Values",
                             "name": "cardThermoValues",
                             "width": "350px",
-                            "add": "",
+                            "add": [],
                             "visible": false,
                             "edit": {
                                 "type": "List",
@@ -435,7 +435,7 @@
                             "caption": "Card Media Values",
                             "name": "cardMediaValues",
                             "width": "350px",
-                            "add": "",
+                            "add": [],
                             "visible": false,
                             "edit": {
                                 "type": "List",
@@ -466,7 +466,7 @@
                                         "caption": "Icon",
                                         "name": "icon",
                                         "width": "150px",
-                                        "add": "",
+                                        "add": "-",
                                         "edit": {
                                             "type": "Select",
                                             "name": "icon",
@@ -564,9 +564,7 @@
                             }
                         }
                     ],
-                    "values": [
-                        {}
-                    ]
+                    "values": []
                 }
             ]
         }

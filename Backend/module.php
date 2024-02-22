@@ -51,11 +51,12 @@ require_once __DIR__ . '/../libs/functions.php';
                     case 'cardGrid':
                         $cardType = 'cardEntities';
                         break;
-                    default:
-                        $cardType = $card['cardType'];
-                        break;
+                default:
+                    $cardType = $card['cardType'];
+                    break;
                 }
                 foreach ($card[$cardType . 'Values'] as $cardKey => $cardValue) {
+                    
                 }
             }
 
@@ -142,8 +143,8 @@ require_once __DIR__ . '/../libs/functions.php';
                             case 'event,startup,55,eu':
                             case 'event,startup,56,eu':
                             case 'event,startup,57,eu':
-                            case 'event,startup,58,eu':                                  
-                            case 'event,startup,59,eu':                                                                    
+                            case 'event,startup,58,eu':
+                            case 'event,startup,59,eu':
                             case 'event,startup,60,eu':
                                 $this->SendDebug('Initialisierung :: Display', $data['Topic'], 0);
                                 $this->CustomSend('time~' . date('H:i'));
